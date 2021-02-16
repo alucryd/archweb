@@ -5,6 +5,9 @@ from os import path
 DEBUG = False
 DEBUG_TOOLBAR = False
 
+# OIDC Login
+OIDC = False
+
 # Notification admins
 ADMINS = ()
 
@@ -54,6 +57,7 @@ MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
     'csp.middleware.CSPMiddleware',
+    'mozilla_django_oidc.middleware.SessionRefresh',
 )
 
 # Base of the URL hierarchy
@@ -111,6 +115,7 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.auth',
+    'mozilla_django_oidc',
     'django.contrib.humanize',
     'django.contrib.messages',
     'django.contrib.sessions',
@@ -204,6 +209,11 @@ try:
     from local_settings import * # noqa
 except ImportError:
     pass
+
+if OIDC:
+    AUTHENTICATION_BACKENDS = (
+        'devel.auth.DevelOIDCAuthenticationBackend.MyOIDCAB',
+    )
 
 TEMPLATES = [
     {
